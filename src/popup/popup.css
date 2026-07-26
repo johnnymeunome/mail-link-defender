@@ -9,8 +9,7 @@
 body { width: 390px; margin: 0; background: #f4f6f8; }
 main { padding: 18px; }
 header { display: flex; align-items: center; gap: 12px; margin-bottom: 17px; }
-.logo { display: grid; width: 43px; height: 43px; place-items: center; border-radius: 13px;
-  background: #16243a; color: #fff; font-size: 12px; font-weight: 900; letter-spacing: .06em; }
+.logo { width: 46px; height: 46px; border-radius: 13px; box-shadow: 0 4px 12px rgba(22, 36, 58, .22); }
 h1 { margin: 0; font-size: 18px; }
 .tagline { margin: 3px 0 0; color: #687386; font-size: 12px; }
 .card, .result { border: 1px solid #dde2e8; border-radius: 14px; background: #fff; box-shadow: 0 3px 14px rgba(28, 39, 54, .05); }

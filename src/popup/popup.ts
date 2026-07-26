@@ -85,7 +85,9 @@ async function sendToActiveTab(message: ExtensionMessage): Promise<PageScanSumma
 }
 
 function renderSummary(summary: PageScanSummary): void {
-  scanSummary.textContent = `${summary.scanned} links analisados: ${summary.high} alta suspeita, ${summary.attention} com atenção.`;
+  scanSummary.textContent = summary.scanned === 0
+    ? "Nenhum link visível para analisar."
+    : `${summary.scanned} links analisados: ${summary.high} alta suspeita, ${summary.attention} com atenção.`;
 }
 
 async function protectionIsEnabled(): Promise<boolean> {
@@ -144,13 +146,19 @@ async function initialize(): Promise<void> {
   if (pending.pendingAnalysis) {
     renderAnalysis(pending.pendingAnalysis as LinkAnalysis);
     await chrome.storage.session.remove("pendingAnalysis");
-  } else if (activeTab?.url?.startsWith("http")) {
-    renderAnalysis(analyzeUrl(activeTab.url));
   }
 
   if (activeTab?.url?.startsWith("https://mail.google.com/")) {
     protectionCard.hidden = false;
     providerToggle.checked = await protectionIsEnabled();
+    scanButton.textContent = "Verificar novamente";
+    try {
+      renderSummary(await sendToActiveTab({ type: "MLD_GET_SCAN_SUMMARY" }));
+    } catch {
+      scanSummary.textContent = "A proteção será iniciada ao abrir um e-mail.";
+    }
+  } else if (!pending.pendingAnalysis && activeTab?.url?.startsWith("http")) {
+    renderAnalysis(analyzeUrl(activeTab.url));
   }
 }
 

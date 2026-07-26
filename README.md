@@ -1,8 +1,23 @@
+<p align="center">
+  <img src="public/icons/icon-128.png" width="112" alt="Ícone do Mail Link Defender" />
+</p>
+
 # Mail Link Defender
+
+![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-16243A)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6)
+![Privacy](https://img.shields.io/badge/privacy-local%20only-2AA876)
+![License](https://img.shields.io/badge/license-MIT-E5534B)
 
 Extensão defensiva para Chrome que analisa links em webmails e alerta sobre sinais de falsificação antes do clique.
 
 > Projeto em estágio MVP. A extensão identifica indícios explicáveis; ela não garante que um link seja seguro ou fraudulento.
+
+## Demonstração
+
+![Links classificados pelo Mail Link Defender](portfolio/screenshots/link-analysis.png)
+
+![Bloqueio explicável antes da navegação](portfolio/screenshots/blocking-warning.png)
 
 ## O que já funciona
 
@@ -77,3 +92,5 @@ A extensão lê apenas os links das páginas em que foi autorizada a funcionar. 
 ## Licença
 
 MIT. Consulte [LICENSE](LICENSE).
+
+Contribuições são bem-vindas. Veja [CONTRIBUTING.md](CONTRIBUTING.md).

@@ -19,6 +19,23 @@
       .example { padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; }
       .example strong { display: block; margin-bottom: 4px; }
       a { color: #155eaa; }
+      a.showcase-attention, a.showcase-high { border-radius: 4px; outline-offset: 2px; }
+      a.showcase-attention { outline: 2px solid #d59b00; }
+      a.showcase-high { outline: 3px solid #e5534b; }
+      .showcase-marker { margin-left: 4px; font-size: 12px; }
+      .showcase-overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
+        padding: 24px; background: rgba(17, 24, 39, .72); }
+      .showcase-dialog { width: min(480px, 100%); padding: 28px; border-radius: 18px; background: #fff;
+        box-shadow: 0 24px 80px rgba(0,0,0,.35); }
+      .showcase-dialog .eyebrow { margin: 0 0 8px; color: #ad261f; font-size: 12px; font-weight: 800; letter-spacing: .1em; }
+      .showcase-dialog h2 { margin: 0 0 12px; font-size: 25px; }
+      .showcase-dialog .domain { overflow-wrap: anywhere; padding: 12px; border-radius: 10px;
+        background: #fff0ef; color: #8d201a; font: 700 14px ui-monospace, monospace; }
+      .showcase-dialog ul { margin: 16px 0; padding-left: 22px; font-size: 14px; line-height: 1.7; }
+      .showcase-dialog .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+      .showcase-dialog button { border-radius: 9px; padding: 10px 14px; font-weight: 700; }
+      .showcase-dialog .back { border: 0; background: #16243a; color: #fff; }
+      .showcase-dialog .proceed { border: 1px solid #d3d8df; background: #fff; color: #4d5561; }
     </style>
   </head>
   <body>
@@ -57,5 +74,6 @@
         </article>
       </section>
     </main>
+    <script type="module" src="./showcase.ts"></script>
   </body>
 </html>
