@@ -5,6 +5,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { width: 390px; margin: 0; background: #f4f6f8; }
 main { padding: 18px; }
 header { display: flex; align-items: center; gap: 12px; margin-bottom: 17px; }

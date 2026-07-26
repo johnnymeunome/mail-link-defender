@@ -36,7 +36,7 @@ function installStyles(): void {
       vertical-align: middle !important;
     }
     a.${CLASS_ATTENTION}::after { content: "⚠"; }
-    a.${CLASS_HIGH}::after { content: "🛡"; }
+    a.${CLASS_HIGH}::after { content: "⛔"; }
   `;
   root.append(style);
 }
