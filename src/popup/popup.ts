@@ -1,8 +1,7 @@
 import { analyzeUrl } from "../analyzer/analyze-url";
 import type { ExtensionMessage, LinkAnalysis, PageScanSummary, RiskLevel } from "../shared/types";
 
-const GMAIL_PATTERN = "https://mail.google.com/*";
-const GMAIL_SCRIPT_ID = "mail-link-defender-gmail";
+const GMAIL_SETTING = "gmailProtectionEnabled";
 const levelLabels: Record<RiskLevel, string> = {
   none: "Nenhum indício relevante detectado",
   attention: "Atenção recomendada",
@@ -90,41 +89,23 @@ function renderSummary(summary: PageScanSummary): void {
 }
 
 async function protectionIsEnabled(): Promise<boolean> {
-  return chrome.permissions.contains({ origins: [GMAIL_PATTERN] });
-}
-
-async function registerGmailProtection(): Promise<void> {
-  const existing = await chrome.scripting.getRegisteredContentScripts({ ids: [GMAIL_SCRIPT_ID] });
-  if (existing.length === 0) {
-    await chrome.scripting.registerContentScripts([{
-      id: GMAIL_SCRIPT_ID,
-      matches: [GMAIL_PATTERN],
-      js: ["entries/content.js"],
-      runAt: "document_start",
-      persistAcrossSessions: true
-    }]);
-  }
+  const stored = await chrome.storage.local.get(GMAIL_SETTING);
+  return stored[GMAIL_SETTING] !== false;
 }
 
 providerToggle.addEventListener("change", async () => {
   providerToggle.disabled = true;
   try {
     if (providerToggle.checked) {
-      const granted = await chrome.permissions.request({ origins: [GMAIL_PATTERN] });
-      if (!granted) {
-        providerToggle.checked = false;
-        return;
-      }
-      await registerGmailProtection();
+      await chrome.storage.local.set({ [GMAIL_SETTING]: true });
       const summary = await sendToActiveTab({ type: "MLD_SCAN_PAGE" });
       renderSummary(summary);
     } else {
-      await chrome.scripting.unregisterContentScripts({ ids: [GMAIL_SCRIPT_ID] }).catch(() => undefined);
+      await chrome.storage.local.set({ [GMAIL_SETTING]: false });
       if (activeTab?.id) {
         await chrome.tabs.sendMessage(activeTab.id, { type: "MLD_DISABLE_PAGE" } satisfies ExtensionMessage)
           .catch(() => undefined);
       }
-      await chrome.permissions.remove({ origins: [GMAIL_PATTERN] });
       scanSummary.textContent = "Proteção automática desativada no Gmail.";
     }
   } finally {

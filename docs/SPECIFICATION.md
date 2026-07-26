@@ -9,8 +9,8 @@ Proteger o usuário antes do clique em hyperlinks exibidos em webmails autorizad
 ### Proteção automática
 
 1. O usuário abre o Gmail e habilita a proteção no popup.
-2. O Chrome solicita acesso opcional somente a `mail.google.com`.
-3. Um content script persistente é registrado em `document_start`.
+2. A instalação solicita acesso somente a `mail.google.com`.
+3. Um content script declarado no manifesto inicia em `document_start`.
 4. O scanner observa os corpos de mensagens e analisa hyperlinks visíveis.
 5. Links com atenção recebem contorno amarelo; links de alta suspeita recebem contorno vermelho.
 6. Cliques de alta suspeita são interrompidos por uma confirmação explicável.
@@ -60,7 +60,7 @@ Proteger o usuário antes do clique em hyperlinks exibidos em webmails autorizad
 
 - zero requisições externas no MVP;
 - nenhuma persistência de URLs analisadas;
-- nenhuma permissão obrigatória de host;
+- permissão de host restrita exclusivamente a `mail.google.com`;
 - código executável integralmente empacotado;
 - mensagens sem alegação de certeza;
 - TypeScript estrito;

@@ -34,7 +34,7 @@ As configurações de proteção são mantidas pelo próprio sistema de permiss�
 - `scripting`: execução local do scanner na aba autorizada.
 - `contextMenus`: análise de um hyperlink pelo menu de contexto.
 - `storage`: passagem temporária de resultados e futuras preferências locais.
-- permissões opcionais de host: proteção automática apenas nos webmails escolhidos pelo usuário.
+- acesso a `mail.google.com`: necessário para iniciar automaticamente a proteção no Gmail; pode ser desativado no popup.
 
 ## Contato
 

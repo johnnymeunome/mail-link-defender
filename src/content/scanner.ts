@@ -256,4 +256,9 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-initialize();
+async function initializeFromSettings(): Promise<void> {
+  const stored = await chrome.storage.local.get("gmailProtectionEnabled");
+  if (stored.gmailProtectionEnabled !== false) initialize();
+}
+
+void initializeFromSettings();
