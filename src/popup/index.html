@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mail Link Defender</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="logo">MLD</div>
+        <div>
+          <h1>Mail Link Defender</h1>
+          <p class="tagline">Entenda o destino antes do clique.</p>
+        </div>
+      </header>
+
+      <section id="protection-card" class="card protection-card" hidden>
+        <div>
+          <p class="label">PROTEÇÃO AUTOMÁTICA</p>
+          <h2 id="provider-title">Gmail</h2>
+          <p id="provider-description">Analisa links visíveis e protege cliques de alta suspeita.</p>
+        </div>
+        <label class="switch">
+          <input id="provider-toggle" type="checkbox" />
+          <span></span>
+        </label>
+      </section>
+
+      <button id="scan-page" class="primary" type="button">Escanear links desta pagina</button>
+      <p id="scan-summary" class="scan-summary" aria-live="polite"></p>
+
+      <form id="url-form" class="url-form">
+        <label for="url-input">Ou cole um link</label>
+        <div class="input-row">
+          <input id="url-input" type="text" inputmode="url" placeholder="https://exemplo.com" />
+          <button type="submit">Analisar</button>
+        </div>
+      </form>
+
+      <section id="result" class="result" aria-live="polite" hidden>
+        <div id="risk-heading" class="risk-heading"></div>
+        <p class="label">DOMÍNIO REGISTRADO</p>
+        <p id="real-domain" class="real-domain"></p>
+        <dl id="domain-details" class="domain-details"></dl>
+        <ul id="findings" class="findings"></ul>
+        <div id="clean-actions" class="clean-actions" hidden>
+          <button id="copy-clean" type="button">Copiar link sem rastreadores</button>
+        </div>
+      </section>
+
+      <p class="privacy-note">Análise local. Nenhum link é enviado ou armazenado.</p>
+    </main>
+    <script type="module" src="./popup.ts"></script>
+  </body>
+</html>

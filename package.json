@@ -1,0 +1,29 @@
+{
+  "name": "mail-link-defender",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Extensão defensiva que explica e protege contra links suspeitos em webmails.",
+  "scripts": {
+    "build": "vite build && vite build --config vite.background.config.ts && vite build --config vite.content.config.ts",
+    "demo": "vite --host 127.0.0.1",
+    "dev": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "punycode": "^2.3.1",
+    "tldts": "^7.4.9",
+    "unicode-confusables": "^0.1.1"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.2.2",
+    "@types/node": "^26.1.1",
+    "@types/punycode": "^2.1.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
+  }
+}

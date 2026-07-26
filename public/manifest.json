@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Mail Link Defender",
+  "description": "Analisa links em webmails e alerta sobre sinais de falsificação antes do clique.",
+  "version": "0.1.0",
+  "minimum_chrome_version": "127",
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "scripting",
+    "storage"
+  ],
+  "optional_host_permissions": [
+    "https://mail.google.com/*",
+    "https://outlook.live.com/*",
+    "https://outlook.office.com/*",
+    "https://outlook.office365.com/*"
+  ],
+  "background": {
+    "service_worker": "entries/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Mail Link Defender",
+    "default_popup": "src/popup/index.html"
+  }
+}
