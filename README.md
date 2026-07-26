@@ -83,8 +83,8 @@ A extensão lê apenas os links das páginas em que foi autorizada a funcionar. 
 - [x] proteção automática no Gmail;
 - [x] scanner manual e menu de contexto;
 - [x] confirmação antes do clique;
-- [ ] testes manuais no Gmail real;
-- [ ] ícones e identidade visual para publicação;
+- [x] testes manuais no Gmail real;
+- [x] ícones e identidade visual para publicação;
 - [ ] adaptador do Outlook;
 - [ ] verificação opcional de redirecionamentos;
 - [ ] publicação na Chrome Web Store.

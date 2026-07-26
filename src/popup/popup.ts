@@ -16,6 +16,7 @@ const findings = document.querySelector<HTMLUListElement>("#findings")!;
 const cleanActions = document.querySelector<HTMLElement>("#clean-actions")!;
 const copyClean = document.querySelector<HTMLButtonElement>("#copy-clean")!;
 const protectionCard = document.querySelector<HTMLElement>("#protection-card")!;
+const protectionStatus = document.querySelector<HTMLElement>("#protection-status")!;
 const providerToggle = document.querySelector<HTMLInputElement>("#provider-toggle")!;
 const scanButton = document.querySelector<HTMLButtonElement>("#scan-page")!;
 const scanSummary = document.querySelector<HTMLElement>("#scan-summary")!;
@@ -36,7 +37,8 @@ function appendDetail(label: string, value: string | null): void {
 function renderAnalysis(analysis: LinkAnalysis): void {
   currentAnalysis = analysis;
   result.hidden = false;
-  riskHeading.className = `risk-heading ${analysis.level}`;
+  result.className = `result ${analysis.level}`;
+  riskHeading.className = "risk-heading";
   riskHeading.textContent = levelLabels[analysis.level];
   realDomain.textContent = analysis.domain.unicodeRegistrableDomain
     ?? analysis.domain.unicodeHostname
@@ -70,6 +72,11 @@ function renderAnalysis(analysis: LinkAnalysis): void {
   cleanActions.hidden = analysis.removedTrackingParameters.length === 0;
 }
 
+function renderProtectionStatus(enabled: boolean): void {
+  protectionCard.classList.toggle("is-off", !enabled);
+  protectionStatus.textContent = enabled ? "Proteção ativa" : "Proteção pausada";
+}
+
 async function sendToActiveTab(message: ExtensionMessage): Promise<PageScanSummary> {
   if (!activeTab?.id) throw new Error("Nenhuma aba ativa encontrada.");
 
@@ -100,10 +107,12 @@ providerToggle.addEventListener("change", async () => {
   try {
     if (providerToggle.checked) {
       await chrome.storage.local.set({ [GMAIL_SETTING]: true });
+      renderProtectionStatus(true);
       const summary = await sendToActiveTab({ type: "MLD_SCAN_PAGE" });
       renderSummary(summary);
     } else {
       await chrome.storage.local.set({ [GMAIL_SETTING]: false });
+      renderProtectionStatus(false);
       if (activeTab?.id) {
         await chrome.tabs.sendMessage(activeTab.id, { type: "MLD_DISABLE_PAGE" } satisfies ExtensionMessage)
           .catch(() => undefined);
@@ -151,7 +160,8 @@ async function initialize(): Promise<void> {
   if (activeTab?.url?.startsWith("https://mail.google.com/")) {
     protectionCard.hidden = false;
     providerToggle.checked = await protectionIsEnabled();
-    scanButton.textContent = "Verificar novamente";
+    renderProtectionStatus(providerToggle.checked);
+    scanButton.querySelector("span")!.textContent = "Verificar novamente";
     try {
       renderSummary(await sendToActiveTab({ type: "MLD_GET_SCAN_SUMMARY" }));
     } catch {

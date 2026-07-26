@@ -7,42 +7,66 @@
     <link rel="stylesheet" href="./popup.css" />
   </head>
   <body>
-    <main>
-      <header>
-        <img class="logo" src="/icons/icon-48.png" alt="" />
-        <div>
+    <main class="app-shell">
+      <header class="app-header">
+        <img class="logo" src="/icons/icon-48.png" alt="" aria-hidden="true" />
+        <div class="brand-copy">
           <h1>Mail Link Defender</h1>
           <p class="tagline">Entenda o destino antes do clique.</p>
         </div>
       </header>
 
-      <section id="protection-card" class="card protection-card" hidden>
-        <div>
-          <p class="label">PROTEÇÃO AUTOMÁTICA</p>
+      <section id="protection-card" class="protection-row" hidden>
+        <div class="protection-copy">
+          <div class="status-line">
+            <span id="protection-dot" class="status-dot" aria-hidden="true"></span>
+            <span id="protection-status">Proteção ativa</span>
+          </div>
           <h2 id="provider-title">Gmail</h2>
-          <p id="provider-description">Protege os links do Gmail antes do clique.</p>
+          <p id="provider-description">Links suspeitos são verificados antes de abrir.</p>
         </div>
-        <label class="switch">
+        <label class="switch" aria-label="Ativar proteção automática no Gmail">
           <input id="provider-toggle" type="checkbox" />
           <span></span>
         </label>
       </section>
 
-      <button id="scan-page" class="primary" type="button">Escanear links desta pagina</button>
-      <p id="scan-summary" class="scan-summary" aria-live="polite"></p>
+      <section class="scan-section">
+        <button id="scan-page" class="primary" type="button">
+          <span>Verificar links desta página</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M4 10h12M11.5 5.5 16 10l-4.5 4.5" />
+          </svg>
+        </button>
+        <p id="scan-summary" class="scan-summary" aria-live="polite"></p>
+      </section>
 
-      <form id="url-form" class="url-form">
-        <label for="url-input">Ou cole um link</label>
+      <div class="section-divider"><span>Análise avulsa</span></div>
+
+      <form id="url-form" class="url-form" autocomplete="off">
+        <label for="url-input">Cole um endereço para analisar</label>
         <div class="input-row">
-          <input id="url-input" type="text" inputmode="url" placeholder="https://exemplo.com" />
-          <button type="submit">Analisar</button>
+          <input id="url-input" type="text" inputmode="url" placeholder="https://exemplo.com" aria-label="Endereço do link" />
+          <button type="submit" aria-label="Analisar link">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M4 10h12M11.5 5.5 16 10l-4.5 4.5" />
+            </svg>
+          </button>
         </div>
       </form>
 
       <section id="result" class="result" aria-live="polite" hidden>
-        <div id="risk-heading" class="risk-heading"></div>
-        <p class="label">DOMÍNIO REGISTRADO</p>
-        <p id="real-domain" class="real-domain"></p>
+        <div class="result-header">
+          <span id="risk-indicator" class="risk-indicator" aria-hidden="true"></span>
+          <div>
+            <p class="result-kicker">Resultado da análise</p>
+            <h2 id="risk-heading" class="risk-heading"></h2>
+          </div>
+        </div>
+        <div class="domain-block">
+          <p class="domain-label">Destino real</p>
+          <p id="real-domain" class="real-domain"></p>
+        </div>
         <dl id="domain-details" class="domain-details"></dl>
         <ul id="findings" class="findings"></ul>
         <div id="clean-actions" class="clean-actions" hidden>
@@ -50,7 +74,12 @@
         </div>
       </section>
 
-      <p class="privacy-note">Análise local. Nenhum link é enviado ou armazenado.</p>
+      <p class="privacy-note">
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M6.5 9V6.8a3.5 3.5 0 0 1 7 0V9M5 9h10v7H5z" />
+        </svg>
+        Análise local. Nenhum link é enviado ou armazenado.
+      </p>
     </main>
     <script type="module" src="./popup.ts"></script>
   </body>

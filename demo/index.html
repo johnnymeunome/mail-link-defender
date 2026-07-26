@@ -5,42 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Caixa de entrada de demonstração</title>
     <style>
-      :root { font-family: Inter, system-ui, sans-serif; color: #1e293b; background: #edf2f7; }
+      :root { font-family: Inter, system-ui, sans-serif; color: #172033; background: #f5f7fa; }
       * { box-sizing: border-box; }
       body { margin: 0; padding: 40px 18px; }
       main { width: min(720px, 100%); margin: auto; }
-      .notice { margin-bottom: 18px; padding: 14px 16px; border-radius: 12px; background: #16243a; color: #fff; font-size: 14px; }
-      .mail { overflow: hidden; border: 1px solid #d8dee7; border-radius: 18px; background: #fff; box-shadow: 0 18px 50px rgba(25, 39, 59, .12); }
-      header { padding: 24px 28px; border-bottom: 1px solid #e6eaf0; }
-      h1 { margin: 0 0 8px; font-size: 22px; }
-      header p, .meta { margin: 0; color: #64748b; font-size: 13px; }
+      .notice { margin-bottom: 16px; padding: 12px 14px; border: 1px solid #dce2ea; border-radius: 9px; background: #fff; color: #475467; font-size: 13px; }
+      .notice strong { color: #172033; }
+      .mail { overflow: hidden; border: 1px solid #dce2ea; border-radius: 12px; background: #fff; }
+      header { padding: 24px 28px; border-bottom: 1px solid #e4e7ec; }
+      h1 { margin: 0 0 7px; font-size: 21px; letter-spacing: -.015em; }
+      header p, .meta { margin: 0; color: #667085; font-size: 13px; }
       article { padding: 28px; line-height: 1.6; }
-      .examples { display: grid; gap: 14px; margin: 22px 0; }
-      .example { padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; }
+      .examples { margin: 22px 0; border-top: 1px solid #e4e7ec; }
+      .example { padding: 15px 0; border-bottom: 1px solid #e4e7ec; }
       .example strong { display: block; margin-bottom: 4px; }
       a { color: #155eaa; }
-      a.showcase-attention, a.showcase-high { border-radius: 4px; outline-offset: 2px; }
-      a.showcase-attention { outline: 2px solid #d59b00; }
-      a.showcase-high { outline: 3px solid #e5534b; }
-      .showcase-marker { margin-left: 4px; font-size: 12px; }
+      a.showcase-attention, a.showcase-high { border-radius: 2px; text-underline-offset: 3px; }
+      a.showcase-attention { background: rgba(154,103,0,.08); box-shadow: inset 0 -2px 0 #b77900; }
+      a.showcase-high { background: rgba(196,61,54,.08); box-shadow: inset 0 -2px 0 #c43d36; }
+      .showcase-marker { display: inline-grid; width: 14px; height: 14px; place-items: center; margin-left: 5px;
+        border-radius: 50%; color: #fff; font-size: 10px; font-weight: 700; line-height: 1; vertical-align: middle; }
+      .showcase-marker.attention { background: #9a6700; }
+      .showcase-marker.high { background: #c43d36; }
       .showcase-overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
-        padding: 24px; background: rgba(17, 24, 39, .72); }
-      .showcase-dialog { width: min(480px, 100%); padding: 28px; border-radius: 18px; background: #fff;
-        box-shadow: 0 24px 80px rgba(0,0,0,.35); }
-      .showcase-dialog .eyebrow { margin: 0 0 8px; color: #ad261f; font-size: 12px; font-weight: 800; letter-spacing: .1em; }
-      .showcase-dialog h2 { margin: 0 0 12px; font-size: 25px; }
-      .showcase-dialog .domain { overflow-wrap: anywhere; padding: 12px; border-radius: 10px;
-        background: #fff0ef; color: #8d201a; font: 700 14px ui-monospace, monospace; }
-      .showcase-dialog ul { margin: 16px 0; padding-left: 22px; font-size: 14px; line-height: 1.7; }
-      .showcase-dialog .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
-      .showcase-dialog button { border-radius: 9px; padding: 10px 14px; font-weight: 700; }
-      .showcase-dialog .back { border: 0; background: #16243a; color: #fff; }
-      .showcase-dialog .proceed { border: 1px solid #d3d8df; background: #fff; color: #4d5561; }
+        padding: 24px; background: rgba(15,23,42,.68); }
+      .showcase-dialog { width: min(440px, 100%); padding: 24px; border: 1px solid rgba(255,255,255,.7);
+        border-radius: 14px; background: #fff; box-shadow: 0 24px 64px rgba(15,23,42,.28); }
+      .showcase-dialog .dialog-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+      .showcase-dialog .warning-mark { display: grid; width: 34px; height: 34px; flex: none; place-items: center;
+        border-radius: 50%; background: #fff0ef; color: #c43d36; font-size: 18px; font-weight: 800; }
+      .showcase-dialog .eyebrow { margin: 0 0 3px; color: #667085; font-size: 12px; }
+      .showcase-dialog h2 { margin: 0; font-size: 21px; letter-spacing: -.015em; }
+      .showcase-dialog .destination-label { margin: 0 0 6px; color: #667085; font-size: 11px; }
+      .showcase-dialog .domain { margin: 0; overflow-wrap: anywhere; padding: 11px 12px; border-radius: 8px;
+        background: #f8fafc; color: #9f2f29; font: 700 14px ui-monospace, monospace; }
+      .showcase-dialog .explanation { margin: 16px 0 10px; color: #475467; font-size: 13px; line-height: 1.5; }
+      .showcase-dialog ul { margin: 0; padding: 0; list-style: none; }
+      .showcase-dialog li { position: relative; padding: 8px 0 8px 18px; border-top: 1px solid #e4e7ec;
+        color: #344054; font-size: 12px; }
+      .showcase-dialog li::before { position: absolute; top: 14px; left: 2px; width: 5px; height: 5px;
+        border-radius: 50%; background: #c43d36; content: ""; }
+      .showcase-dialog .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+      .showcase-dialog button { border-radius: 8px; padding: 10px 13px; font-size: 12px; font-weight: 650; }
+      .showcase-dialog .back { border: 0; background: #172b4d; color: #fff; }
+      .showcase-dialog .proceed { border: 1px solid #d0d5dd; background: #fff; color: #667085; }
     </style>
   </head>
   <body>
     <main>
-      <p class="notice">Abra o popup do Mail Link Defender e clique em “Escanear links desta página”.</p>
+      <p class="notice"><strong>Demonstração:</strong> abra o Mail Link Defender e selecione “Verificar links desta página”.</p>
       <section class="mail" role="main">
         <header>
           <h1>Confirme os links da sua conta</h1>

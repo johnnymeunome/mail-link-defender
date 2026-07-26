@@ -10,8 +10,8 @@ function decorate(): LinkAnalysis | null {
     if (analysis.level === "none") return;
     anchor.classList.add(analysis.level === "high" ? "showcase-high" : "showcase-attention");
     const marker = document.createElement("span");
-    marker.className = "showcase-marker";
-    marker.textContent = analysis.level === "high" ? "⛔" : "⚠";
+    marker.className = `showcase-marker ${analysis.level}`;
+    marker.textContent = "!";
     anchor.after(marker);
     if (!firstHigh && analysis.level === "high") firstHigh = analysis;
   });
@@ -24,14 +24,20 @@ function showWarning(analysis: LinkAnalysis): void {
   const dialog = document.createElement("section");
   dialog.className = "showcase-dialog";
   dialog.innerHTML = `
-    <p class="eyebrow">MAIL LINK DEFENDER</p>
-    <h2>Possível link de phishing</h2>
+    <div class="dialog-head">
+      <span class="warning-mark">!</span>
+      <div>
+        <p class="eyebrow">Navegação interrompida</p>
+        <h2>Este link parece perigoso</h2>
+      </div>
+    </div>
+    <p class="destination-label">Destino real</p>
     <p class="domain"></p>
-    <p>O link apresenta sinais que merecem verificação antes de continuar.</p>
+    <p class="explanation">Encontramos sinais comuns em links de phishing. Confira o endereço antes de continuar.</p>
     <ul></ul>
     <div class="actions">
-      <button class="back">Voltar</button>
-      <button class="proceed">Abrir mesmo assim</button>
+      <button class="back">Voltar em segurança</button>
+      <button class="proceed">Continuar mesmo assim</button>
     </div>
   `;
   dialog.querySelector<HTMLElement>(".domain")!.textContent =

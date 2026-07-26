@@ -24,19 +24,36 @@ function installStyles(): void {
   style.id = STYLE_ID;
   style.textContent = `
     a.${CLASS_ATTENTION}, a.${CLASS_HIGH} {
-      border-radius: 3px !important;
-      outline-offset: 2px !important;
+      border-radius: 2px !important;
+      box-decoration-break: clone !important;
+      -webkit-box-decoration-break: clone !important;
       position: relative !important;
+      text-decoration-color: currentColor !important;
+      text-decoration-thickness: 1px !important;
+      text-underline-offset: 3px !important;
     }
-    a.${CLASS_ATTENTION} { outline: 2px solid #d59b00 !important; }
-    a.${CLASS_HIGH} { outline: 3px solid #c9362b !important; }
+    a.${CLASS_ATTENTION} {
+      background: rgba(154, 103, 0, .08) !important;
+      box-shadow: inset 0 -2px 0 #b77900 !important;
+    }
+    a.${CLASS_HIGH} {
+      background: rgba(196, 61, 54, .08) !important;
+      box-shadow: inset 0 -2px 0 #c43d36 !important;
+    }
     a.${CLASS_ATTENTION}::after, a.${CLASS_HIGH}::after {
-      font: 12px/1 system-ui, sans-serif !important;
-      margin-left: 4px !important;
+      display: inline-grid !important;
+      width: 14px !important;
+      height: 14px !important;
+      place-items: center !important;
+      margin-left: 5px !important;
+      border-radius: 50% !important;
+      color: #fff !important;
+      content: "!" !important;
+      font: 700 10px/1 system-ui, sans-serif !important;
       vertical-align: middle !important;
     }
-    a.${CLASS_ATTENTION}::after { content: "⚠"; }
-    a.${CLASS_HIGH}::after { content: "⛔"; }
+    a.${CLASS_ATTENTION}::after { background: #9a6700 !important; }
+    a.${CLASS_HIGH}::after { background: #c43d36 !important; }
   `;
   root.append(style);
 }
@@ -129,17 +146,29 @@ function showWarning(anchor: HTMLAnchorElement, analysis: LinkAnalysis): void {
   dialog.setAttribute("aria-modal", "true");
   dialog.setAttribute("aria-labelledby", "mld-warning-title");
 
+  const dialogHead = document.createElement("div");
+  dialogHead.className = "dialog-head";
+  const warningMark = document.createElement("span");
+  warningMark.className = "warning-mark";
+  warningMark.textContent = "!";
+  const headingCopy = document.createElement("div");
   const eyebrow = document.createElement("p");
   eyebrow.className = "eyebrow";
-  eyebrow.textContent = "MAIL LINK DEFENDER";
+  eyebrow.textContent = "Navegação interrompida";
   const title = document.createElement("h2");
   title.id = "mld-warning-title";
-  title.textContent = "Possível link de phishing";
+  title.textContent = "Este link parece perigoso";
+  headingCopy.append(eyebrow, title);
+  dialogHead.append(warningMark, headingCopy);
+  const destinationLabel = document.createElement("p");
+  destinationLabel.className = "destination-label";
+  destinationLabel.textContent = "Destino real";
   const domain = document.createElement("p");
   domain.className = "domain";
   domain.textContent = analysis.domain.unicodeRegistrableDomain ?? analysis.domain.hostname ?? anchor.href;
   const explanation = document.createElement("p");
-  explanation.textContent = "O link apresenta sinais que merecem verificação antes de continuar.";
+  explanation.className = "explanation";
+  explanation.textContent = "Encontramos sinais comuns em links de phishing. Confira o endereço antes de continuar.";
 
   const list = document.createElement("ul");
   analysis.findings
@@ -155,34 +184,51 @@ function showWarning(anchor: HTMLAnchorElement, analysis: LinkAnalysis): void {
   actions.className = "actions";
   const cancel = document.createElement("button");
   cancel.className = "cancel";
-  cancel.textContent = "Voltar";
+  cancel.textContent = "Voltar em segurança";
   cancel.addEventListener("click", closeWarning);
   const proceed = document.createElement("button");
   proceed.className = "proceed";
-  proceed.textContent = "Abrir mesmo assim";
+  proceed.textContent = "Continuar mesmo assim";
   proceed.addEventListener("click", () => openDestination(anchor));
   actions.append(cancel, proceed);
 
   const style = document.createElement("style");
   style.textContent = `
     :host { all: initial; }
+    * { box-sizing: border-box; }
     .overlay { position: fixed; inset: 0; z-index: 2147483647; display: grid; place-items: center;
-      padding: 24px; background: rgba(17, 24, 39, .72); font-family: system-ui, sans-serif; }
-    .dialog { box-sizing: border-box; width: min(480px, 100%); padding: 28px; border-radius: 18px;
-      background: #fff; color: #172033; box-shadow: 0 24px 80px rgba(0,0,0,.35); }
-    .eyebrow { margin: 0 0 8px; color: #ad261f; font-size: 12px; font-weight: 800; letter-spacing: .1em; }
-    h2 { margin: 0 0 12px; font-size: 25px; line-height: 1.2; }
-    p { font-size: 15px; line-height: 1.5; }
-    .domain { overflow-wrap: anywhere; padding: 12px; border-radius: 10px; background: #fff0ef;
-      color: #8d201a; font-family: ui-monospace, monospace; font-weight: 700; }
-    ul { margin: 16px 0; padding-left: 22px; font-size: 14px; line-height: 1.6; }
-    .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
-    button { cursor: pointer; border-radius: 9px; padding: 10px 14px; font: 700 14px system-ui, sans-serif; }
-    .cancel { border: 0; background: #16243a; color: #fff; }
-    .proceed { border: 1px solid #d3d8df; background: #fff; color: #4d5561; }
+      padding: 24px; background: rgba(15, 23, 42, .68); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    .dialog { width: min(440px, 100%); padding: 24px; border: 1px solid rgba(255,255,255,.7); border-radius: 14px;
+      background: #fff; color: #172033; box-shadow: 0 24px 64px rgba(15,23,42,.28); }
+    .dialog-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+    .warning-mark { display: grid; width: 34px; height: 34px; flex: none; place-items: center; border-radius: 50%;
+      background: #fff0ef; color: #c43d36; font: 800 18px/1 system-ui, sans-serif; }
+    .eyebrow { margin: 0 0 3px; color: #667085; font-size: 12px; line-height: 1.35; }
+    h2 { margin: 0; color: #172033; font-size: 21px; line-height: 1.25; letter-spacing: -.015em; }
+    .destination-label { margin: 0 0 6px; color: #667085; font-size: 11px; }
+    .domain { margin: 0; overflow-wrap: anywhere; padding: 11px 12px; border-radius: 8px; background: #f8fafc;
+      color: #9f2f29; font: 700 14px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .explanation { margin: 16px 0 10px; color: #475467; font-size: 13px; line-height: 1.5; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    li { position: relative; padding: 8px 0 8px 18px; border-top: 1px solid #e4e7ec;
+      color: #344054; font-size: 12px; line-height: 1.45; }
+    li::before { position: absolute; top: 13px; left: 2px; width: 5px; height: 5px; border-radius: 50%;
+      background: #c43d36; content: ""; }
+    .actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+    button { cursor: pointer; border-radius: 8px; padding: 10px 13px; font: 650 12px system-ui, sans-serif; }
+    .cancel { border: 0; background: #172b4d; color: #fff; }
+    .cancel:hover { background: #203a63; }
+    .proceed { border: 1px solid #d0d5dd; background: #fff; color: #667085; }
+    .proceed:hover { background: #f8fafc; color: #344054; }
+    button:focus-visible { outline: 2px solid #84adff; outline-offset: 2px; }
+    @media (max-width: 460px) {
+      .dialog { padding: 20px; }
+      .actions { align-items: stretch; flex-direction: column; }
+      .cancel { order: -1; }
+    }
   `;
 
-  dialog.append(eyebrow, title, domain, explanation, list, actions);
+  dialog.append(dialogHead, destinationLabel, domain, explanation, list, actions);
   overlay.append(dialog);
   shadow.append(style, overlay);
   document.documentElement.append(host);
