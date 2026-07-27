@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/icons/icon-128.png" width="112" alt="Ícone do Mail Link Defender" />
+  <img src="portfolio/repository-header.png" width="100%" alt="Mail Link Defender bloqueando um possível link de phishing" />
 </p>
 
 # Mail Link Defender

@@ -157,6 +157,23 @@ function openDestination(anchor: HTMLAnchorElement): void {
   }
 }
 
+function createWarningSymbol(): SVGSVGElement {
+  const namespace = "http://www.w3.org/2000/svg";
+  const symbol = document.createElementNS(namespace, "svg");
+  symbol.setAttribute("viewBox", "0 0 24 24");
+  symbol.setAttribute("aria-hidden", "true");
+
+  const shield = document.createElementNS(namespace, "path");
+  shield.setAttribute("class", "shield-shape");
+  shield.setAttribute("d", "M12 2.5 20 6v6.1c0 5-3.3 8.1-8 9.9-4.7-1.8-8-4.9-8-9.9V6l8-3.5Z");
+
+  const mark = document.createElementNS(namespace, "path");
+  mark.setAttribute("class", "shield-mark");
+  mark.setAttribute("d", "M12 7.3v6.5M12 17.2h.01");
+  symbol.append(shield, mark);
+  return symbol;
+}
+
 function showWarning(anchor: HTMLAnchorElement, analysis: LinkAnalysis): void {
   closeWarning();
   const host = document.createElement("div");
@@ -175,7 +192,7 @@ function showWarning(anchor: HTMLAnchorElement, analysis: LinkAnalysis): void {
   dialogHead.className = "dialog-head";
   const warningMark = document.createElement("span");
   warningMark.className = "warning-mark";
-  warningMark.textContent = "!";
+  warningMark.append(createWarningSymbol());
   const headingCopy = document.createElement("div");
   const eyebrow = document.createElement("p");
   eyebrow.className = "eyebrow";
@@ -226,8 +243,10 @@ function showWarning(anchor: HTMLAnchorElement, analysis: LinkAnalysis): void {
       font-family: Inter, ui-sans-serif, system-ui, sans-serif; animation: danger-enter .22s ease-out; }
     .dialog { width: min(760px, 100%); color: #fff; }
     .dialog-head { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 32px; }
-    .warning-mark { display: grid; width: 58px; height: 58px; flex: none; place-items: center; border: 2px solid rgba(255,255,255,.72);
-      border-radius: 50%; background: #fff; color: #b42318; font: 850 30px/1 system-ui, sans-serif; }
+    .warning-mark { display: block; width: 64px; height: 64px; flex: none; }
+    .warning-mark svg { display: block; width: 100%; height: 100%; }
+    .shield-shape { fill: #fff; }
+    .shield-mark { fill: none; stroke: #b42318; stroke-linecap: round; stroke-width: 2.2; }
     .eyebrow { margin: 1px 0 5px; color: rgba(255,255,255,.78); font-size: 14px; font-weight: 650; line-height: 1.35; }
     h2 { margin: 0; color: #fff; font-size: clamp(32px, 5vw, 48px); line-height: 1.08; letter-spacing: -.035em; }
     .destination-label { margin: 0 0 8px; color: rgba(255,255,255,.74); font-size: 13px; }
@@ -250,7 +269,7 @@ function showWarning(anchor: HTMLAnchorElement, analysis: LinkAnalysis): void {
     @media (max-width: 600px) {
       .overlay { place-items: start center; padding: 32px 22px; }
       .dialog-head { gap: 13px; margin-bottom: 24px; }
-      .warning-mark { width: 44px; height: 44px; font-size: 23px; }
+      .warning-mark { width: 48px; height: 48px; }
       h2 { font-size: 30px; }
       .domain { font-size: 15px; }
       .explanation { margin-top: 20px; font-size: 14px; }

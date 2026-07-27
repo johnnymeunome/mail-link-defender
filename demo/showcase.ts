@@ -25,7 +25,12 @@ function showWarning(analysis: LinkAnalysis): void {
   dialog.className = "showcase-dialog";
   dialog.innerHTML = `
     <div class="dialog-head">
-      <span class="warning-mark">!</span>
+      <span class="warning-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path class="shield-shape" d="M12 2.5 20 6v6.1c0 5-3.3 8.1-8 9.9-4.7-1.8-8-4.9-8-9.9V6l8-3.5Z"></path>
+          <path class="shield-mark" d="M12 7.3v6.5M12 17.2h.01"></path>
+        </svg>
+      </span>
       <div>
         <p class="eyebrow">Perigo detectado · navegação interrompida</p>
         <h2>Este link parece perigoso</h2>
