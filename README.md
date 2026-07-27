@@ -8,6 +8,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6)
 ![Privacy](https://img.shields.io/badge/privacy-local%20only-2AA876)
 ![License](https://img.shields.io/badge/license-MIT-E5534B)
+[![Release](https://img.shields.io/github/v/release/johnnymeunome/mail-link-defender)](https://github.com/johnnymeunome/mail-link-defender/releases/latest)
 
 Extensão defensiva para Chrome que analisa links em webmails e alerta sobre sinais de falsificação antes do clique.
 
@@ -20,6 +21,14 @@ Extensão defensiva para Chrome que analisa links em webmails e alerta sobre sin
 ## Demonstração
 
 ![Links classificados pelo Mail Link Defender](portfolio/screenshots/link-analysis.png)
+
+## Download
+
+Baixe o pacote validado na [Release mais recente](https://github.com/johnnymeunome/mail-link-defender/releases/latest).
+
+## Publicação na Chrome Web Store
+
+Os [textos da listagem](portfolio/STORE_LISTING.md), o [checklist de submissão](portfolio/CHROME_WEB_STORE_CHECKLIST.md) e os materiais gráficos estão preparados em `portfolio/store-assets`.
 
 ## O que já funciona
 

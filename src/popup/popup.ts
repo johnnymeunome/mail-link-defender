@@ -186,6 +186,16 @@ copyClean.addEventListener("click", async () => {
 });
 
 async function initialize(): Promise<void> {
+  if (import.meta.env.DEV && new URLSearchParams(window.location.search).get("preview") === "gmail-high") {
+    protectionCard.hidden = false;
+    providerToggle.checked = true;
+    renderProtectionStatus(true);
+    scanIdleLabel = "Verificar este e-mail";
+    renderScanning(false);
+    renderSummary({ scanned: 2, none: 1, attention: 0, high: 1 });
+    return;
+  }
+
   [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const pending = await chrome.storage.session.get("pendingAnalysis");
   if (pending.pendingAnalysis) {

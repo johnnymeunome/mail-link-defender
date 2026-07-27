@@ -1,24 +1,24 @@
-# Política de privacidade do MVP
+# Política de privacidade
 
 Última atualização: 26 de julho de 2026.
 
 ## Resumo
 
-O Mail Link Defender processa links localmente no navegador. O MVP não possui servidor, conta, telemetria, publicidade ou analytics.
+O Mail Link Defender processa links localmente no navegador para detectar sinais de phishing. A extensão não possui servidor, conta, publicidade, telemetria ou analytics.
 
 ## Dados acessados
 
-Quando o usuário ativa a proteção em um webmail, a extensão pode ler:
+Quando a proteção está ativa no Gmail ou o usuário solicita uma análise manual, a extensão pode processar:
 
 - endereços dos hyperlinks exibidos;
 - texto visível associado a esses hyperlinks;
 - domínio da página atual.
 
-Esse acesso existe exclusivamente para detectar possíveis falsificações e apresentar alertas antes do clique.
+Esse acesso existe exclusivamente para identificar possíveis falsificações, explicar o destino real e apresentar alertas antes do clique.
 
-## Dados coletados ou transmitidos
+## Coleta, transmissão e compartilhamento
 
-O MVP não coleta, transmite, vende ou compartilha:
+O Mail Link Defender não transmite, vende ou compartilha:
 
 - conteúdo de e-mails;
 - URLs analisadas;
@@ -26,16 +26,34 @@ O MVP não coleta, transmite, vende ou compartilha:
 - dados pessoais;
 - resultados das análises.
 
-As configurações de proteção são mantidas pelo próprio sistema de permissões do Chrome. Resultados temporários do menu de contexto são armazenados apenas na sessão do navegador e removidos depois de exibidos.
+Não existe comunicação com servidores do desenvolvedor ou de terceiros. Todo o processamento da análise acontece no dispositivo do usuário.
+
+## Armazenamento e retenção
+
+A preferência de ativação da proteção do Gmail é mantida localmente pelo Chrome até ser alterada pelo usuário ou até a extensão ser removida.
+
+Resultados solicitados pelo menu de contexto são mantidos apenas na sessão do navegador e removidos depois de exibidos. A extensão não cria histórico das análises.
 
 ## Permissões
 
 - `activeTab`: análise manual da aba após uma ação explícita do usuário.
 - `scripting`: execução local do scanner na aba autorizada.
 - `contextMenus`: análise de um hyperlink pelo menu de contexto.
-- `storage`: passagem temporária de resultados e futuras preferências locais.
-- acesso a `mail.google.com`: necessário para iniciar automaticamente a proteção no Gmail; pode ser desativado no popup.
+- `storage`: preferência local de proteção e passagem temporária de resultados da sessão.
+- acesso a `mail.google.com`: proteção automática dos links exibidos no Gmail; pode ser desativada no popup.
+
+## Uso limitado
+
+O uso das informações acessadas pela extensão é limitado à função declarada de proteção contra phishing. Os dados não são usados para publicidade, definição de crédito, venda, transferência a corretores de dados ou leitura humana.
+
+O uso de informações pelo Mail Link Defender seguirá a Política de Dados do Usuário da Chrome Web Store, incluindo os requisitos de Uso Limitado.
+
+## Controle do usuário
+
+O usuário pode pausar a proteção automática pelo popup. A remoção da extensão apaga as preferências locais mantidas pelo Chrome.
 
 ## Contato
 
-Antes da publicação, este documento deverá receber a URL e o contato público do mantenedor.
+Dúvidas e solicitações podem ser enviadas pela página pública de suporte:
+
+https://github.com/johnnymeunome/mail-link-defender/issues

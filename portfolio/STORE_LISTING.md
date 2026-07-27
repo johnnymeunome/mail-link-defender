@@ -1,70 +1,92 @@
-# Rascunho da Chrome Web Store
+# Conteúdo final da Chrome Web Store
 
-## Nome
+## Identificação
 
-Mail Link Defender
+**Nome:** Mail Link Defender
 
-## Resumo curto
+**Idioma principal:** Português (Brasil)
 
-Analisa links no Gmail e alerta sobre domínios falsificados antes do clique.
+**Resumo curto:** Analisa links no Gmail e alerta sobre domínios falsificados antes do clique.
 
-## Descrição
+## Descrição detalhada
 
-O Mail Link Defender ajuda você a entender o destino real de um hyperlink antes de abrir a página.
+O Mail Link Defender ajuda você a entender o destino real de um link antes de abrir a página.
 
-Ao usar o Gmail, a extensão analisa localmente os links visíveis e destaca características que merecem atenção, incluindo:
+No Gmail, a extensão verifica localmente os links visíveis e destaca sinais que merecem atenção, como caracteres Unicode confundíveis, domínios que imitam marcas conhecidas, texto diferente do destino real, subdomínios enganosos, endereços IP, conexões sem HTTPS, portas incomuns, encurtadores e redirecionamentos externos.
 
-- caracteres Unicode parecidos com letras comuns;
-- domínios que imitam marcas conhecidas;
-- texto exibido diferente do destino real;
-- subdomínios enganosos;
-- endereços IP, HTTP e portas incomuns;
-- encurtadores e parâmetros de redirecionamento.
+Quando um link apresenta alta suspeita, a navegação é interrompida por uma tela vermelha que mostra o domínio real e explica os motivos do alerta. Você pode voltar em segurança ou decidir continuar por conta própria.
 
-Links de alta suspeita são interrompidos por uma tela explicativa. O usuário pode voltar ou decidir abrir o endereço mesmo assim.
+Principais recursos:
 
-Todo o processamento do MVP acontece no navegador. URLs e conteúdo de e-mails não são enviados ou armazenados.
+- proteção automática no Gmail;
+- verificação manual da página atual;
+- análise individual pelo menu de contexto;
+- detecção de imitações Unicode e Punycode;
+- comparação entre texto exibido e destino real;
+- remoção conservadora de parâmetros de rastreamento;
+- motivos claros para cada classificação;
+- processamento local, sem servidor, publicidade ou telemetria.
 
-O resultado indica sinais de risco e não garante que um site seja seguro ou fraudulento.
+O Mail Link Defender identifica sinais de risco. Nenhuma análise garante que um site seja seguro ou fraudulento.
 
 ## Propósito único
 
-Proteger usuários contra links potencialmente falsificados em webmail antes da navegação.
+Proteger usuários do Gmail contra links potencialmente falsificados, explicando o destino e interrompendo links de alta suspeita antes da navegação.
 
 ## Justificativas de permissões
 
-### Acesso a mail.google.com
+### `https://mail.google.com/*`
 
-Necessário para examinar localmente os hyperlinks exibidos no corpo das mensagens e apresentar o alerta antes do clique.
+Permite que a proteção automática examine somente os endereços e textos dos links visíveis no Gmail e apresente o aviso antes do clique. O acesso está limitado ao domínio do Gmail.
 
-### activeTab
+### `activeTab`
 
-Permite a análise manual da página atual após o usuário clicar no ícone da extensão.
+Autoriza a análise manual da aba atual somente depois que o usuário interage com o ícone da extensão.
 
-### scripting
+### `scripting`
 
-Permite executar o scanner manual na aba escolhida pelo usuário.
+Permite iniciar o scanner local na aba atual quando o usuário solicita uma verificação manual.
 
-### contextMenus
+### `contextMenus`
 
 Adiciona a ação “Analisar link com Mail Link Defender” ao menu de contexto de hyperlinks.
 
-### storage
+### `storage`
 
-Armazena apenas a preferência local de ativação da proteção e resultados temporários da sessão.
+Mantém localmente a preferência de ativação da proteção do Gmail e, durante a sessão, o resultado temporário solicitado pelo menu de contexto.
 
-## Privacidade declarada
+## Código remoto
 
-- não vende dados;
-- não usa dados para publicidade;
-- não transmite URLs ou conteúdo de mensagens;
-- não possui analytics ou telemetria;
-- não usa código hospedado remotamente.
+**Declaração:** não utiliza código remoto. Todo JavaScript executado faz parte do pacote enviado à Chrome Web Store.
 
-## Pendências antes da submissão
+## Práticas de dados
 
-- adicionar contato público do desenvolvedor;
-- publicar a política de privacidade em uma URL pública;
-- confirmar disponibilidade do nome;
-- revisar screenshots e descrição final;
-- realizar teste em uma instalação limpa do Chrome.
+A extensão processa localmente:
+
+- endereços dos links;
+- texto visível associado aos links;
+- domínio da página atual.
+
+Essas informações são usadas apenas para a função visível de proteção contra phishing. Não são transmitidas, vendidas, compartilhadas, usadas para publicidade ou armazenadas como histórico.
+
+No formulário da loja, declarar de forma conservadora o tratamento local de **conteúdo de sites** e **atividade de navegação/URLs**, caso essas categorias sejam exibidas. A declaração deve deixar claro que o processamento é local e necessário para a função principal.
+
+## URLs públicas
+
+- **Página inicial:** https://github.com/johnnymeunome/mail-link-defender
+- **Suporte:** https://github.com/johnnymeunome/mail-link-defender/issues
+- **Política de privacidade:** https://github.com/johnnymeunome/mail-link-defender/blob/main/PRIVACY.md
+- **Código-fonte:** https://github.com/johnnymeunome/mail-link-defender
+
+## Materiais gráficos
+
+- `portfolio/store-assets/icon-128.png`
+- `portfolio/store-assets/01-link-analysis.png`
+- `portfolio/store-assets/02-danger-warning.png`
+- `portfolio/store-assets/03-popup-high-risk.png`
+- `portfolio/store-assets/small-promo-440x280.png`
+- `portfolio/store-assets/marquee-1400x560.png` — opcional
+
+## Pacote
+
+Usar o ZIP anexado à Release `v0.2.3`. O arquivo contém o `manifest.json` na raiz e não inclui código-fonte de desenvolvimento.
