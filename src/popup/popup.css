@@ -33,11 +33,14 @@ h1 { margin: 0; font-size: 16px; font-weight: 720; letter-spacing: -.015em; }
 
 .protection-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 0; border-block: 1px solid var(--line); }
 .protection-copy { min-width: 0; }
+.provider-heading { display: flex; align-items: center; gap: 9px; }
+.provider-icon { display: grid; width: 30px; height: 30px; flex: none; place-items: center; border-radius: 8px; background: var(--danger-soft); color: var(--danger); }
+.provider-icon svg { width: 17px; height: 17px; }
 .status-line { display: flex; align-items: center; gap: 6px; color: var(--safe); font-size: 11px; font-weight: 650; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .protection-row.is-off .status-line { color: var(--muted); }
-.protection-row h2 { margin: 6px 0 2px; font-size: 14px; font-weight: 700; }
-.protection-row p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+.protection-row h2 { margin: 0 0 2px; font-size: 14px; font-weight: 700; }
+.protection-row p { max-width: 235px; margin: 9px 0 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
 .switch { flex: none; }
 .switch input { position: absolute; opacity: 0; pointer-events: none; }
 .switch span { position: relative; display: block; width: 38px; height: 22px; border-radius: 999px; background: #d0d5dd; cursor: pointer; transition: background .18s ease; }
@@ -47,12 +50,24 @@ h1 { margin: 0; font-size: 16px; font-weight: 720; letter-spacing: -.015em; }
 .switch input:checked + span::after { transform: translateX(16px); }
 .switch input:disabled + span { cursor: wait; opacity: .6; }
 
-.scan-section { margin-top: 16px; }
-.primary { display: flex; width: 100%; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 8px; padding: 11px 14px; background: var(--navy); color: #fff; font-size: 12px; font-weight: 680; transition: background .15s ease; }
-.primary:hover { background: var(--navy-hover); }
-.primary:disabled { cursor: wait; opacity: .65; }
-.primary svg { width: 16px; height: 16px; }
-.scan-summary { min-height: 16px; margin: 8px 1px 0; color: var(--muted); font-size: 10.5px; line-height: 1.45; }
+.scan-section { display: grid; justify-items: center; margin-top: 20px; text-align: center; }
+.scan-button { position: relative; display: grid; width: 68px; height: 68px; place-items: center; border: 0; border-radius: 50%; background: var(--navy); color: #fff; transition: background .15s ease, transform .15s ease; }
+.scan-button::after { position: absolute; inset: -1px; border: 1px solid transparent; border-radius: inherit; content: ""; pointer-events: none; }
+.scan-button:hover { background: var(--navy-hover); transform: translateY(-1px); }
+.scan-button:active { transform: translateY(0) scale(.97); }
+.scan-button:focus-visible { outline: 2px solid #84adff; outline-offset: 3px; }
+.scan-button:disabled { cursor: wait; opacity: .8; }
+.scan-icon { width: 27px; height: 27px; stroke-width: 1.55; }
+.scan-sweep { transform-box: fill-box; transform-origin: 50% 100%; }
+.scan-button.is-scanning::after { border-color: rgba(23,43,77,.35); animation: scan-pulse 1.15s ease-out infinite; }
+.scan-button.is-scanning .scan-sweep { animation: scan-rotate .8s linear infinite; transform-origin: 8.5px 8.5px; }
+.scan-action-label { margin: 9px 0 0; color: var(--ink); font-size: 12px; font-weight: 680; }
+.scan-summary { min-height: 16px; margin: 5px 1px 0; color: var(--muted); font-size: 10.5px; line-height: 1.45; }
+@keyframes scan-rotate { to { transform: rotate(360deg); } }
+@keyframes scan-pulse { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.25); } }
+@media (prefers-reduced-motion: reduce) {
+  .scan-button, .scan-button::after, .scan-sweep { animation: none !important; transition: none; }
+}
 
 .section-divider { display: flex; align-items: center; gap: 10px; margin: 18px 0 14px; color: var(--subtle); font-size: 9.5px; font-weight: 650; letter-spacing: .04em; }
 .section-divider::before, .section-divider::after { content: ""; height: 1px; flex: 1; background: var(--line); }

@@ -18,12 +18,21 @@
 
       <section id="protection-card" class="protection-row" hidden>
         <div class="protection-copy">
-          <div class="status-line">
-            <span id="protection-dot" class="status-dot" aria-hidden="true"></span>
-            <span id="protection-status">Proteção ativa</span>
+          <div class="provider-heading">
+            <span class="provider-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20">
+                <path d="M3.5 5.5h13v9h-13zM4 6l6 4.5L16 6" />
+              </svg>
+            </span>
+            <div>
+              <h2 id="provider-title">Gmail</h2>
+              <div class="status-line">
+                <span id="protection-dot" class="status-dot" aria-hidden="true"></span>
+                <span id="protection-status">Proteção ativa</span>
+              </div>
+            </div>
           </div>
-          <h2 id="provider-title">Gmail</h2>
-          <p id="provider-description">Links suspeitos são verificados antes de abrir.</p>
+          <p id="provider-description">Verifica os links do e-mail antes de você clicar.</p>
         </div>
         <label class="switch" aria-label="Ativar proteção automática no Gmail">
           <input id="provider-toggle" type="checkbox" />
@@ -32,12 +41,14 @@
       </section>
 
       <section class="scan-section">
-        <button id="scan-page" class="primary" type="button">
-          <span>Verificar links desta página</span>
-          <svg viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M4 10h12M11.5 5.5 16 10l-4.5 4.5" />
+        <button id="scan-page" class="scan-button" type="button" aria-label="Verificar links desta página">
+          <svg class="scan-icon" viewBox="0 0 20 20" aria-hidden="true">
+            <circle cx="8.5" cy="8.5" r="5.5" />
+            <path class="scan-sweep" d="M8.5 8.5V4" />
+            <path d="m12.5 12.5 4 4" />
           </svg>
         </button>
+        <p id="scan-action-label" class="scan-action-label">Verificar esta página</p>
         <p id="scan-summary" class="scan-summary" aria-live="polite"></p>
       </section>
 

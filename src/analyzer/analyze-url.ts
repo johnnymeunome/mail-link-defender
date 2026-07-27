@@ -6,6 +6,7 @@ import { cleanTrackingParameters } from "./tracking";
 import { decodeHostname, getScripts } from "./unicode";
 
 const WEB_PROTOCOLS = new Set(["http:", "https:"]);
+const PASSIVE_PROTOCOLS = new Set(["cid:", "mailto:", "sms:", "tel:"]);
 const REDIRECT_PARAMETERS = new Set([
   "continue",
   "dest",
@@ -79,6 +80,47 @@ function invalidAnalysis(input: string, message: string): LinkAnalysis {
   };
 }
 
+function passiveLinkAnalysis(input: string, url: URL): LinkAnalysis {
+  return {
+    input,
+    originalUrl: url.href,
+    normalizedUrl: url.href,
+    cleanUrl: url.href,
+    protocol: url.protocol,
+    port: "",
+    usernamePresent: false,
+    passwordPresent: false,
+    domain: EMPTY_DOMAIN,
+    removedTrackingParameters: [],
+    scripts: [],
+    brandMatch: null,
+    findings: [],
+    level: "none",
+    valid: true
+  };
+}
+
+function findExternalRedirect(url: URL, sourceDomain: string | null): {
+  parameter: string;
+  target: URL;
+} | null {
+  for (const [name, value] of url.searchParams.entries()) {
+    if (!REDIRECT_PARAMETERS.has(name.toLowerCase()) || !value) continue;
+
+    try {
+      const target = new URL(value, url);
+      if (!WEB_PROTOCOLS.has(target.protocol)) continue;
+      const targetDomain = parse(target.hostname).domain ?? null;
+      if (!targetDomain || targetDomain === sourceDomain) continue;
+      return { parameter: name, target };
+    } catch {
+      // Valores que não formam um endereço navegável não são tratados como redirecionamento.
+    }
+  }
+
+  return null;
+}
+
 function extractDisplayedUrl(displayText?: string): URL | null {
   if (!displayText) return null;
   const match = displayText.trim().match(/https?:\/\/[^\s<>]+/iu);
@@ -100,6 +142,8 @@ export function analyzeUrl(input: string, context?: { displayText?: string }): L
   } catch (error) {
     return invalidAnalysis(input, error instanceof Error ? error.message : "URL inválida");
   }
+
+  if (PASSIVE_PROTOCOLS.has(url.protocol)) return passiveLinkAnalysis(input, url);
 
   const findings: Finding[] = [];
   const isWebProtocol = WEB_PROTOCOLS.has(url.protocol);
@@ -254,10 +298,10 @@ export function analyzeUrl(input: string, context?: { displayText?: string }): L
     findings.push(
       finding(
         "long-url",
-        "attention",
+        "info",
         "obfuscation",
         "Endereço muito longo",
-        "Endereços muito longos podem dificultar a identificação visual do destino."
+        "O comprimento dificulta a leitura, mas isoladamente não indica fraude."
       )
     );
   }
@@ -274,18 +318,16 @@ export function analyzeUrl(input: string, context?: { displayText?: string }): L
     );
   }
 
-  const redirectParameter = Array.from(url.searchParams.keys()).find((name) =>
-    REDIRECT_PARAMETERS.has(name.toLowerCase())
-  );
-  if (redirectParameter) {
+  const externalRedirect = findExternalRedirect(url, domain.registrableDomain);
+  if (externalRedirect) {
     findings.push(
       finding(
         "redirect-parameter",
         "attention",
         "obfuscation",
-        "Parâmetro de redirecionamento",
-        "O link inclui outro destino em um parâmetro. Ele não será removido automaticamente.",
-        redirectParameter
+        "Redirecionamento para outro domínio",
+        `O link encaminha para ${externalRedirect.target.hostname}. O parâmetro não será removido automaticamente.`,
+        externalRedirect.parameter
       )
     );
   }

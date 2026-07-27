@@ -1,5 +1,6 @@
 import { analyzeUrl } from "../analyzer/analyze-url";
 import type { ExtensionMessage, LinkAnalysis, PageScanSummary } from "../shared/types";
+import { isScannableLink } from "./link-filter";
 
 declare global {
   interface Window {
@@ -11,6 +12,7 @@ const CLASS_ATTENTION = "mld-link-attention";
 const CLASS_HIGH = "mld-link-high";
 const STYLE_ID = "mld-protection-styles";
 const MODAL_HOST_ID = "mld-warning-host";
+const ORIGINAL_TITLE_ATTRIBUTE = "data-mail-link-defender-original-title";
 const analyses = new WeakMap<HTMLAnchorElement, LinkAnalysis>();
 let observer: MutationObserver | null = null;
 let scanTimer: number | null = null;
@@ -71,11 +73,25 @@ function scanRoots(): ParentNode[] {
   return [main ?? document.body ?? document.documentElement];
 }
 
+function clearDecoration(anchor: HTMLAnchorElement): void {
+  anchor.classList.remove(CLASS_ATTENTION, CLASS_HIGH);
+  anchor.removeAttribute("data-mail-link-defender");
+
+  if (!anchor.hasAttribute(ORIGINAL_TITLE_ATTRIBUTE)) return;
+  const originalTitle = anchor.getAttribute(ORIGINAL_TITLE_ATTRIBUTE) ?? "";
+  if (originalTitle) anchor.title = originalTitle;
+  else anchor.removeAttribute("title");
+  anchor.removeAttribute(ORIGINAL_TITLE_ATTRIBUTE);
+}
+
 function decorate(anchor: HTMLAnchorElement, analysis: LinkAnalysis): void {
   anchor.classList.remove(CLASS_ATTENTION, CLASS_HIGH);
   anchor.removeAttribute("data-mail-link-defender");
 
-  if (analysis.level === "none") return;
+  if (analysis.level === "none") {
+    clearDecoration(anchor);
+    return;
+  }
 
   const className = analysis.level === "high" ? CLASS_HIGH : CLASS_ATTENTION;
   anchor.classList.add(className);
@@ -83,7 +99,11 @@ function decorate(anchor: HTMLAnchorElement, analysis: LinkAnalysis): void {
   const reason = analysis.findings.find((item) => item.severity === analysis.level)?.title
     ?? analysis.findings[0]?.title
     ?? "Link merece verificação";
-  anchor.title = `${anchor.title ? `${anchor.title}\n` : ""}Mail Link Defender: ${reason}`;
+  if (!anchor.hasAttribute(ORIGINAL_TITLE_ATTRIBUTE)) {
+    anchor.setAttribute(ORIGINAL_TITLE_ATTRIBUTE, anchor.getAttribute("title") ?? "");
+  }
+  const originalTitle = anchor.getAttribute(ORIGINAL_TITLE_ATTRIBUTE) ?? "";
+  anchor.title = `${originalTitle ? `${originalTitle}\n` : ""}Mail Link Defender: ${reason}`;
 }
 
 function scanPage(): PageScanSummary {
@@ -96,6 +116,11 @@ function scanPage(): PageScanSummary {
   const summary: PageScanSummary = { scanned: 0, none: 0, attention: 0, high: 0 };
   for (const anchor of anchors) {
     if (!isVisible(anchor)) continue;
+    if (!isScannableLink(anchor.getAttribute("href"), anchor.href)) {
+      analyses.delete(anchor);
+      clearDecoration(anchor);
+      continue;
+    }
     const href = anchor.href;
     if (!href) continue;
 
@@ -240,6 +265,7 @@ function clickGuard(event: MouseEvent): void {
   const target = event.composedPath().find((item) => item instanceof Element) as Element | undefined;
   const anchor = target?.closest<HTMLAnchorElement>("a[href]");
   if (!anchor) return;
+  if (!isScannableLink(anchor.getAttribute("href"), anchor.href)) return;
 
   const analysis = analyses.get(anchor)
     ?? analyzeUrl(anchor.href, { displayText: anchor.textContent ?? "" });
@@ -257,8 +283,7 @@ function disableProtection(): void {
   observer = null;
   document.removeEventListener("click", clickGuard, true);
   document.querySelectorAll(`.${CLASS_ATTENTION}, .${CLASS_HIGH}`).forEach((element) => {
-    element.classList.remove(CLASS_ATTENTION, CLASS_HIGH);
-    element.removeAttribute("data-mail-link-defender");
+    if (element instanceof HTMLAnchorElement) clearDecoration(element);
   });
   document.getElementById(STYLE_ID)?.remove();
   closeWarning();

@@ -19,11 +19,13 @@ const protectionCard = document.querySelector<HTMLElement>("#protection-card")!;
 const protectionStatus = document.querySelector<HTMLElement>("#protection-status")!;
 const providerToggle = document.querySelector<HTMLInputElement>("#provider-toggle")!;
 const scanButton = document.querySelector<HTMLButtonElement>("#scan-page")!;
+const scanActionLabel = document.querySelector<HTMLElement>("#scan-action-label")!;
 const scanSummary = document.querySelector<HTMLElement>("#scan-summary")!;
 const urlForm = document.querySelector<HTMLFormElement>("#url-form")!;
 const urlInput = document.querySelector<HTMLInputElement>("#url-input")!;
 let activeTab: chrome.tabs.Tab | undefined;
 let currentAnalysis: LinkAnalysis | null = null;
+let scanIdleLabel = "Verificar esta página";
 
 function appendDetail(label: string, value: string | null): void {
   if (!value) return;
@@ -77,6 +79,13 @@ function renderProtectionStatus(enabled: boolean): void {
   protectionStatus.textContent = enabled ? "Proteção ativa" : "Proteção pausada";
 }
 
+function renderScanning(scanning: boolean): void {
+  scanButton.classList.toggle("is-scanning", scanning);
+  scanButton.disabled = scanning;
+  scanButton.setAttribute("aria-label", scanning ? "Analisando links" : scanIdleLabel);
+  scanActionLabel.textContent = scanning ? "Analisando links..." : scanIdleLabel;
+}
+
 async function sendToActiveTab(message: ExtensionMessage): Promise<PageScanSummary> {
   if (!activeTab?.id) throw new Error("Nenhuma aba ativa encontrada.");
 
@@ -125,14 +134,14 @@ providerToggle.addEventListener("change", async () => {
 });
 
 scanButton.addEventListener("click", async () => {
-  scanButton.disabled = true;
-  scanSummary.textContent = "Analisando links visíveis...";
+  renderScanning(true);
+  scanSummary.textContent = "";
   try {
     renderSummary(await sendToActiveTab({ type: "MLD_SCAN_PAGE" }));
   } catch {
     scanSummary.textContent = "Não foi possível analisar esta página.";
   } finally {
-    scanButton.disabled = false;
+    renderScanning(false);
   }
 });
 
@@ -161,7 +170,8 @@ async function initialize(): Promise<void> {
     protectionCard.hidden = false;
     providerToggle.checked = await protectionIsEnabled();
     renderProtectionStatus(providerToggle.checked);
-    scanButton.querySelector("span")!.textContent = "Verificar novamente";
+    scanIdleLabel = "Verificar este e-mail";
+    renderScanning(false);
     try {
       renderSummary(await sendToActiveTab({ type: "MLD_GET_SCAN_SUMMARY" }));
     } catch {

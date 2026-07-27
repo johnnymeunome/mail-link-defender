@@ -1,6 +1,7 @@
 import { toASCII } from "punycode";
 import { describe, expect, it } from "vitest";
 import { analyzeUrl } from "../src/analyzer/analyze-url";
+import { isScannableLink } from "../src/content/link-filter";
 
 describe("analyzeUrl", () => {
   it("reveals the registrable domain behind a misleading subdomain", () => {
@@ -63,6 +64,42 @@ describe("analyzeUrl", () => {
     expect(result.level).toBe("attention");
   });
 
+  it.each([
+    "mailto:security@example.com",
+    "tel:+5511999999999",
+    "sms:+5511999999999",
+    "cid:logo@example.com"
+  ])("treats the passive link as neutral: %s", (url) => {
+    const result = analyzeUrl(url);
+
+    expect(result.level).toBe("none");
+    expect(result.findings).toHaveLength(0);
+  });
+
+  it("does not flag a same-domain redirect parameter", () => {
+    const result = analyzeUrl(
+      "https://accounts.google.com/start?continue=https%3A%2F%2Fmyaccount.google.com%2Fsecurity"
+    );
+
+    expect(result.findings.some((item) => item.id === "redirect-parameter")).toBe(false);
+  });
+
+  it("flags a redirect parameter that points to another domain", () => {
+    const result = analyzeUrl(
+      "https://accounts.google.com/start?continue=https%3A%2F%2Fevil.example%2Flogin"
+    );
+
+    expect(result.findings.some((item) => item.id === "redirect-parameter")).toBe(true);
+    expect(result.level).toBe("attention");
+  });
+
+  it("treats URL length alone as information", () => {
+    const result = analyzeUrl(`https://example.com/${"a".repeat(230)}`);
+
+    expect(result.findings.find((item) => item.id === "long-url")?.severity).toBe("info");
+    expect(result.level).toBe("none");
+  });
+
   it("flags an IP address used as host", () => {
     const result = analyzeUrl("http://192.0.2.1/login");
 
@@ -110,13 +147,30 @@ describe("analyzeUrl", () => {
     ["unusual-port", "https://example.com:8443/login"],
     ["deep-subdomain", "https://a.b.c.d.e.example.com/login"],
     ["redirect-parameter", "https://example.com/?redirect=https%3A%2F%2Fother.test"],
-    ["long-url", `https://example.com/${"a".repeat(230)}`],
     ["encoded-content", "https://example.com/%41%42%43%44%45%46%47%48%49"],
     ["brand-imitation", "https://micros0ft.com/login"],
-    ["unsupported-scheme", "mailto:security@example.com"]
+    ["unsupported-scheme", "javascript:alert(1)"]
   ])("detects the signal %s", (findingId, url) => {
     const result = analyzeUrl(url);
 
     expect(result.findings.some((item) => item.id === findingId)).toBe(true);
+  });
+});
+
+describe("isScannableLink", () => {
+  it.each([
+    ["mailto:security@example.com", "mailto:security@example.com"],
+    ["tel:+5511999999999", "tel:+5511999999999"],
+    ["sms:+5511999999999", "sms:+5511999999999"],
+    ["#settings", "https://mail.google.com/mail/u/0/#settings"]
+  ])("ignores the non-web link %s", (rawHref, resolvedHref) => {
+    expect(isScannableLink(rawHref, resolvedHref)).toBe(false);
+  });
+
+  it.each([
+    ["https://example.com", "https://example.com/"],
+    ["/security", "https://example.com/security"]
+  ])("accepts the web link %s", (rawHref, resolvedHref) => {
+    expect(isScannableLink(rawHref, resolvedHref)).toBe(true);
   });
 });
