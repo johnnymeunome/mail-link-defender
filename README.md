@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="portfolio/repository-header.png" width="100%" alt="Mail Link Defender bloqueando um possível link de phishing" />
+  <img src="public/icons/icon-128.png" width="112" alt="Ícone do Mail Link Defender" />
 </p>
 
 # Mail Link Defender
@@ -13,11 +13,13 @@ Extensão defensiva para Chrome que analisa links em webmails e alerta sobre sin
 
 > Projeto em estágio MVP. A extensão identifica indícios explicáveis; ela não garante que um link seja seguro ou fraudulento.
 
+## Perigo visível antes do clique
+
+![Mail Link Defender bloqueando um possível link de phishing](portfolio/repository-header.png)
+
 ## Demonstração
 
 ![Links classificados pelo Mail Link Defender](portfolio/screenshots/link-analysis.png)
-
-![Bloqueio explicável antes da navegação](portfolio/screenshots/blocking-warning.png)
 
 ## O que já funciona
 
