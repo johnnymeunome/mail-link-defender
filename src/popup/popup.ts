@@ -27,6 +27,12 @@ let activeTab: chrome.tabs.Tab | undefined;
 let currentAnalysis: LinkAnalysis | null = null;
 let scanIdleLabel = "Verificar esta página";
 
+type VisualState = RiskLevel | "idle" | "scanning";
+
+function renderVisualState(state: VisualState): void {
+  document.body.dataset.scanState = state;
+}
+
 function appendDetail(label: string, value: string | null): void {
   if (!value) return;
   const term = document.createElement("dt");
@@ -38,6 +44,7 @@ function appendDetail(label: string, value: string | null): void {
 
 function renderAnalysis(analysis: LinkAnalysis): void {
   currentAnalysis = analysis;
+  renderVisualState(analysis.level);
   result.hidden = false;
   result.className = `result ${analysis.level}`;
   riskHeading.className = "risk-heading";
@@ -84,6 +91,7 @@ function renderScanning(scanning: boolean): void {
   scanButton.disabled = scanning;
   scanButton.setAttribute("aria-label", scanning ? "Analisando links" : scanIdleLabel);
   scanActionLabel.textContent = scanning ? "Analisando links..." : scanIdleLabel;
+  if (scanning) renderVisualState("scanning");
 }
 
 async function sendToActiveTab(message: ExtensionMessage): Promise<PageScanSummary> {
@@ -101,9 +109,26 @@ async function sendToActiveTab(message: ExtensionMessage): Promise<PageScanSumma
 }
 
 function renderSummary(summary: PageScanSummary): void {
-  scanSummary.textContent = summary.scanned === 0
-    ? "Nenhum link visível para analisar."
-    : `${summary.scanned} links analisados: ${summary.high} alta suspeita, ${summary.attention} com atenção.`;
+  if (summary.scanned === 0) {
+    renderVisualState("idle");
+    scanSummary.textContent = "Nenhum link web para verificar";
+    return;
+  }
+
+  if (summary.high > 0) {
+    renderVisualState("high");
+    scanSummary.textContent = `${summary.scanned} links verificados · ${summary.high} suspeito${summary.high > 1 ? "s" : ""}`;
+    return;
+  }
+
+  if (summary.attention > 0) {
+    renderVisualState("attention");
+    scanSummary.textContent = `${summary.scanned} links verificados · ${summary.attention} exige${summary.attention > 1 ? "m" : ""} atenção`;
+    return;
+  }
+
+  renderVisualState("none");
+  scanSummary.textContent = `${summary.scanned} links verificados · nenhum alerta`;
 }
 
 async function protectionIsEnabled(): Promise<boolean> {
@@ -127,6 +152,7 @@ providerToggle.addEventListener("change", async () => {
           .catch(() => undefined);
       }
       scanSummary.textContent = "Proteção automática desativada no Gmail.";
+      renderVisualState("idle");
     }
   } finally {
     providerToggle.disabled = false;
@@ -139,6 +165,7 @@ scanButton.addEventListener("click", async () => {
   try {
     renderSummary(await sendToActiveTab({ type: "MLD_SCAN_PAGE" }));
   } catch {
+    renderVisualState("idle");
     scanSummary.textContent = "Não foi possível analisar esta página.";
   } finally {
     renderScanning(false);

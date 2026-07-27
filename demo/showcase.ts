@@ -27,7 +27,7 @@ function showWarning(analysis: LinkAnalysis): void {
     <div class="dialog-head">
       <span class="warning-mark">!</span>
       <div>
-        <p class="eyebrow">Navegação interrompida</p>
+        <p class="eyebrow">Perigo detectado · navegação interrompida</p>
         <h2>Este link parece perigoso</h2>
       </div>
     </div>

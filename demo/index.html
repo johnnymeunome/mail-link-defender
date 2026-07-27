@@ -28,27 +28,27 @@
       .showcase-marker.attention { background: #9a6700; }
       .showcase-marker.high { background: #c43d36; }
       .showcase-overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
-        padding: 24px; background: rgba(15,23,42,.68); }
-      .showcase-dialog { width: min(440px, 100%); padding: 24px; border: 1px solid rgba(255,255,255,.7);
-        border-radius: 14px; background: #fff; box-shadow: 0 24px 64px rgba(15,23,42,.28); }
-      .showcase-dialog .dialog-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
-      .showcase-dialog .warning-mark { display: grid; width: 34px; height: 34px; flex: none; place-items: center;
-        border-radius: 50%; background: #fff0ef; color: #c43d36; font-size: 18px; font-weight: 800; }
-      .showcase-dialog .eyebrow { margin: 0 0 3px; color: #667085; font-size: 12px; }
-      .showcase-dialog h2 { margin: 0; font-size: 21px; letter-spacing: -.015em; }
-      .showcase-dialog .destination-label { margin: 0 0 6px; color: #667085; font-size: 11px; }
-      .showcase-dialog .domain { margin: 0; overflow-wrap: anywhere; padding: 11px 12px; border-radius: 8px;
-        background: #f8fafc; color: #9f2f29; font: 700 14px ui-monospace, monospace; }
-      .showcase-dialog .explanation { margin: 16px 0 10px; color: #475467; font-size: 13px; line-height: 1.5; }
+        padding: clamp(28px, 6vw, 88px); overflow: auto; background: #b42318; color: #fff; }
+      .showcase-dialog { width: min(760px, 100%); color: #fff; }
+      .showcase-dialog .dialog-head { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 32px; }
+      .showcase-dialog .warning-mark { display: grid; width: 58px; height: 58px; flex: none; place-items: center;
+        border: 2px solid rgba(255,255,255,.72); border-radius: 50%; background: #fff; color: #b42318;
+        font-size: 30px; font-weight: 850; }
+      .showcase-dialog .eyebrow { margin: 1px 0 5px; color: rgba(255,255,255,.78); font-size: 14px; font-weight: 650; }
+      .showcase-dialog h2 { margin: 0; color: #fff; font-size: clamp(32px, 5vw, 48px); line-height: 1.08; letter-spacing: -.035em; }
+      .showcase-dialog .destination-label { margin: 0 0 8px; color: rgba(255,255,255,.74); font-size: 13px; }
+      .showcase-dialog .domain { margin: 0; overflow-wrap: anywhere; padding: 17px 18px; border-radius: 10px;
+        background: #fff; color: #9f2f29; font: 750 18px ui-monospace, monospace; }
+      .showcase-dialog .explanation { max-width: 650px; margin: 24px 0 14px; color: rgba(255,255,255,.9); font-size: 16px; line-height: 1.55; }
       .showcase-dialog ul { margin: 0; padding: 0; list-style: none; }
-      .showcase-dialog li { position: relative; padding: 8px 0 8px 18px; border-top: 1px solid #e4e7ec;
-        color: #344054; font-size: 12px; }
-      .showcase-dialog li::before { position: absolute; top: 14px; left: 2px; width: 5px; height: 5px;
-        border-radius: 50%; background: #c43d36; content: ""; }
-      .showcase-dialog .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
-      .showcase-dialog button { border-radius: 8px; padding: 10px 13px; font-size: 12px; font-weight: 650; }
-      .showcase-dialog .back { border: 0; background: #172b4d; color: #fff; }
-      .showcase-dialog .proceed { border: 1px solid #d0d5dd; background: #fff; color: #667085; }
+      .showcase-dialog li { position: relative; padding: 12px 0 12px 22px; border-top: 1px solid rgba(255,255,255,.24);
+        color: #fff; font-size: 14px; }
+      .showcase-dialog li::before { position: absolute; top: 18px; left: 3px; width: 6px; height: 6px;
+        border-radius: 50%; background: #fff; content: ""; }
+      .showcase-dialog .actions { display: flex; gap: 10px; margin-top: 32px; }
+      .showcase-dialog button { border-radius: 9px; padding: 13px 17px; font-size: 14px; font-weight: 700; }
+      .showcase-dialog .back { border: 1px solid #fff; background: #fff; color: #9f2f29; }
+      .showcase-dialog .proceed { border: 1px solid rgba(255,255,255,.58); background: transparent; color: #fff; }
     </style>
   </head>
   <body>

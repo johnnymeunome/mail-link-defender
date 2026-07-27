@@ -13,6 +13,11 @@
   --attention-soft: #fff7e6;
   --danger: #c43d36;
   --danger-soft: #fff0ef;
+  --page-bg: #ffffff;
+  --field-border: #d0d5dd;
+  --focus: #84adff;
+  --status-soft: #f2f4f7;
+  --status-strong: #667085;
   color: var(--ink);
   background: var(--surface);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -20,7 +25,61 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { width: 372px; margin: 0; background: var(--surface); }
+body { width: 372px; margin: 0; background: var(--page-bg); transition: background-color .24s ease, color .24s ease; }
+body[data-scan-state="scanning"] {
+  --page-bg: #f4f8fd;
+  --line: #d9e5f2;
+  --canvas: #f7faff;
+  --muted: #58708d;
+  --subtle: #8195ac;
+  --field-border: #c5d5e7;
+  --status-soft: #e6f0fb;
+  --status-strong: #285b91;
+  --navy: #24558d;
+  --navy-hover: #1d4777;
+}
+body[data-scan-state="none"] {
+  --page-bg: #f3faf7;
+  --ink: #17382d;
+  --line: #cfe7dd;
+  --canvas: #f7fcf9;
+  --muted: #58746a;
+  --subtle: #7d9b90;
+  --field-border: #bddbd0;
+  --focus: #65b99a;
+  --status-soft: #dff3ea;
+  --status-strong: #126b49;
+  --navy: #16845b;
+  --navy-hover: #116b49;
+}
+body[data-scan-state="attention"] {
+  --page-bg: #fff9ed;
+  --ink: #43351a;
+  --line: #efdfb6;
+  --canvas: #fffcf5;
+  --muted: #76684a;
+  --subtle: #9e8a5f;
+  --field-border: #dfcc9d;
+  --focus: #d7a936;
+  --status-soft: #ffedbd;
+  --status-strong: #7a5200;
+  --navy: #9a6700;
+  --navy-hover: #7f5500;
+}
+body[data-scan-state="high"] {
+  --page-bg: #fff1f0;
+  --ink: #442321;
+  --line: #efcbc8;
+  --canvas: #fff8f7;
+  --muted: #7e5b59;
+  --subtle: #a77f7c;
+  --field-border: #e2b6b2;
+  --focus: #df7771;
+  --status-soft: #ffdeda;
+  --status-strong: #9f2f29;
+  --navy: #c43d36;
+  --navy-hover: #a8322d;
+}
 button, input { font: inherit; }
 button { cursor: pointer; }
 svg { display: block; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
@@ -45,7 +104,7 @@ h1 { margin: 0; font-size: 16px; font-weight: 720; letter-spacing: -.015em; }
 .switch input { position: absolute; opacity: 0; pointer-events: none; }
 .switch span { position: relative; display: block; width: 38px; height: 22px; border-radius: 999px; background: #d0d5dd; cursor: pointer; transition: background .18s ease; }
 .switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(16,24,40,.18); transition: transform .18s ease; }
-.switch input:focus-visible + span { outline: 2px solid #84adff; outline-offset: 2px; }
+.switch input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
 .switch input:checked + span { background: var(--safe); }
 .switch input:checked + span::after { transform: translateX(16px); }
 .switch input:disabled + span { cursor: wait; opacity: .6; }
@@ -55,26 +114,28 @@ h1 { margin: 0; font-size: 16px; font-weight: 720; letter-spacing: -.015em; }
 .scan-button::after { position: absolute; inset: -1px; border: 1px solid transparent; border-radius: inherit; content: ""; pointer-events: none; }
 .scan-button:hover { background: var(--navy-hover); transform: translateY(-1px); }
 .scan-button:active { transform: translateY(0) scale(.97); }
-.scan-button:focus-visible { outline: 2px solid #84adff; outline-offset: 3px; }
+.scan-button:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 .scan-button:disabled { cursor: wait; opacity: .8; }
 .scan-icon { width: 27px; height: 27px; stroke-width: 1.55; }
 .scan-sweep { transform-box: fill-box; transform-origin: 50% 100%; }
 .scan-button.is-scanning::after { border-color: rgba(23,43,77,.35); animation: scan-pulse 1.15s ease-out infinite; }
 .scan-button.is-scanning .scan-sweep { animation: scan-rotate .8s linear infinite; transform-origin: 8.5px 8.5px; }
 .scan-action-label { margin: 9px 0 0; color: var(--ink); font-size: 12px; font-weight: 680; }
-.scan-summary { min-height: 16px; margin: 5px 1px 0; color: var(--muted); font-size: 10.5px; line-height: 1.45; }
+.scan-summary { min-height: 16px; margin: 6px 1px 0; color: var(--muted); font-size: 10.5px; line-height: 1.45; transition: color .2s ease, background-color .2s ease; }
+.scan-summary:not(:empty) { display: inline-flex; align-items: center; gap: 6px; min-height: 0; padding: 5px 9px; border-radius: 999px; background: var(--status-soft); color: var(--status-strong); font-weight: 620; }
+.scan-summary:not(:empty)::before { width: 6px; height: 6px; flex: none; border-radius: 50%; background: currentColor; content: ""; }
 @keyframes scan-rotate { to { transform: rotate(360deg); } }
 @keyframes scan-pulse { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.25); } }
 @media (prefers-reduced-motion: reduce) {
-  .scan-button, .scan-button::after, .scan-sweep { animation: none !important; transition: none; }
+  body, .scan-button, .scan-button::after, .scan-sweep { animation: none !important; transition: none; }
 }
 
 .section-divider { display: flex; align-items: center; gap: 10px; margin: 18px 0 14px; color: var(--subtle); font-size: 9.5px; font-weight: 650; letter-spacing: .04em; }
 .section-divider::before, .section-divider::after { content: ""; height: 1px; flex: 1; background: var(--line); }
 .url-form { margin: 0; }
 .url-form > label { display: block; margin-bottom: 7px; color: var(--muted); font-size: 11px; font-weight: 600; }
-.input-row { display: flex; overflow: hidden; border: 1px solid #d0d5dd; border-radius: 8px; background: #fff; transition: border-color .15s ease, box-shadow .15s ease; }
-.input-row:focus-within { border-color: #84adff; box-shadow: 0 0 0 3px rgba(132,173,255,.18); }
+.input-row { display: flex; overflow: hidden; border: 1px solid var(--field-border); border-radius: 8px; background: rgba(255,255,255,.8); transition: border-color .15s ease, box-shadow .15s ease, background-color .2s ease; }
+.input-row:focus-within { border-color: var(--focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 20%, transparent); }
 .input-row input { min-width: 0; flex: 1; border: 0; outline: 0; padding: 10px 11px; color: var(--ink); background: transparent; font-size: 12px; }
 .input-row input::placeholder { color: var(--subtle); }
 .input-row button { display: grid; width: 39px; flex: none; place-items: center; border: 0; border-left: 1px solid var(--line); background: var(--canvas); color: var(--navy); }
